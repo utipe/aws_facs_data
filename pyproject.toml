@@ -1,0 +1,20 @@
+[project]
+name = "umap-fcs-plotter"
+version = "0.1.0"
+description = "A script for UMAP projection of FCS data using fcsparser and matplotlib"
+authors = [
+  { name="An Le", email="lemyan.utipe@gmail.com" }
+]
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+  "fcsparser",
+  "pandas",
+  "umap-learn",
+  "matplotlib",
+  "scikit-learn"
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
