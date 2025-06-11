@@ -6,6 +6,7 @@ from sklearn.preprocessing import StandardScaler
 import time
 import logging
 import os
+import numpy as np
 
 # --- Logging Setup ---
 log_file = os.path.join(os.path.dirname(__file__), "umap_run.log")
