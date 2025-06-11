@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 def run_umap_on_fcs(
     fcs_path: str = "20250520_ALL_Patient_BM_sort.fcs",
-    output_image_path: str = "20250606_an_replication.png"
+    output_image_path: str = "20250611_an_replication.png"
 ):
     """
     Parse an FCS file, perform UMAP on selected columns, and save a plot.
@@ -44,9 +44,25 @@ def run_umap_on_fcs(
     logger.info(f"UMAP took {end - start:.2f} seconds.")
 
     plt.figure(figsize=(10, 7))
-    plt.scatter(embedding[:, 0], embedding[:, 1], s=2, cmap='Spectral')
+    plt.scatter(embedding[:, 0], embedding[:, 1], s=2)
     plt.title('UMAP Projection')
     plt.savefig(output_image_path, dpi=300)
+    plt.close()
+    logger.info(f"Saved UMAP plot to: {output_image_path}")
+    for var in range(15, 15+26):
+        plot_umap_intensity(embedding, data.iloc[:, var].values, data.columns[var], f"20250611_umap_{data.columns[var]}.png")
+
+
+def plot_umap_intensity(embeddings, color_var, color_name, output_image_path) -> None:
+    norm = plt.Normalize(vmin=color_var.min(), vmax=color_var.max())
+    colors = plt.cm.bwr(norm(color_var))  # blue to red colormap
+
+    plt.figure(figsize=(10, 7))
+    plt.scatter(embeddings[:, 0], embeddings[:, 1], s=2, color=colors)
+    plt.colorbar(plt.cm.ScalarMappable(norm=norm, cmap='bwr'), label=color_name)
+    plt.title(f'UMAP Projection colored by {color_name} intensity')
+    plt.savefig(output_image_path, dpi=300)
+    plt.close()
     logger.info(f"Saved UMAP plot to: {output_image_path}")
 
 if __name__ == "__main__":
