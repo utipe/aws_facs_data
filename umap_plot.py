@@ -54,8 +54,9 @@ def run_umap_on_fcs(
 
 
 def plot_umap_intensity(embeddings, color_var, color_name, output_image_path) -> None:
-    norm = plt.Normalize(vmin=color_var.min(), vmax=color_var.max())
-    colors = plt.cm.bwr(norm(color_var))  # blue to red colormap
+    percentiles = np.percentile(color_var, np.linspace(0, 100, len(color_var)))
+    norm = plt.Normalize(vmin=0, vmax=100)
+    colors = plt.cm.bwr(norm(percentiles))
 
     plt.figure(figsize=(10, 7))
     plt.scatter(embeddings[:, 0], embeddings[:, 1], s=2, color=colors)
