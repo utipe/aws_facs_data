@@ -21,11 +21,24 @@ These are listed in the `pyproject.toml`.
 ## 🚀 Setup
 
 1. Make sure you're using **Python 3.8 or later**.
-2. Create a virtual environment:
+2. Install unzip:
+    ```bash
+    sudo apt update
+    sudo apt install unzip 
+    sudo apt install python3.12-venv
+3. Install AWS CLI: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html#getting-started-install-instructions
+4. Download the required fcs file:
+    ```bash
+    aws s3 cp s3://kobe-u-cmsproject-flowjo/20250520_Inoue_patient_analysis/Tubes/20250520_ALL_Patient_BM_sort.fcs ./
+5. Clone this repos
+6. Create a virtual environment:
    ```bash
-   python -m venv umap
+   cd aws_facs_data
+   python3 -m venv umap
    source umap/bin/activate
+   pip install .
 ---
+
 
 ## Usage
 

@@ -59,7 +59,7 @@ def plot_umap_intensity(embeddings, color_var, color_name, output_image_path) ->
 
     plt.figure(figsize=(10, 7))
     plt.scatter(embeddings[:, 0], embeddings[:, 1], s=2, color=colors)
-    plt.colorbar(plt.cm.ScalarMappable(norm=norm, cmap='bwr'), label=color_name)
+    plt.colorbar(plt.cm.ScalarMappable(norm=norm, cmap='bwr'), ax=plt.gca(), label=color_name)
     plt.title(f'UMAP Projection colored by {color_name} intensity')
     plt.savefig(output_image_path, dpi=300)
     plt.close()
