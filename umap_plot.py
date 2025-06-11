@@ -51,6 +51,7 @@ def run_umap_on_fcs(
     plt.close()
     logger.info(f"Saved UMAP plot to: {output_image_path}")
     for var in range(15, 15+26):
+        print(f"start mapping for {data.columns[var]}")
         plot_umap_intensity(embedding, data.iloc[:, var].values, data.columns[var], f"20250611_umap_{data.columns[var]}.png")
 
 
