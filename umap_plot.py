@@ -6,7 +6,7 @@ import time
 import logging
 import os
 import numpy as np
-from scipy.stats import gaussian_kde
+from sklearn.neighbors import NearestNeighbors
 
 
 # --- Logging Setup ---
@@ -37,7 +37,8 @@ def run_umap_on_fcs(
 
     logger.info("Scaling selected columns (15 to 41)...")
     X = data.iloc[:, 15:15+26]
-    X_transformed = np.arcsinh(X / 5)
+    cofactor = 150
+    X_transformed = np.arcsinh(X / cofactor)
 
     logger.info("Running UMAP...")
     start = time.time()
@@ -47,19 +48,25 @@ def run_umap_on_fcs(
     end = time.time()
     logger.info(f"UMAP took {end - start:.2f} seconds.")
 
-    xy = np.vstack([data["UMAP1"], data["UMAP2"]])
-    z = gaussian_kde(xy)(xy)
-    data["density"] = z
+    logger.info(f"Save UMAP embedding.")
+    embedding_df = pd.DataFrame(embedding, columns=["UMAP_1", "UMAP_2"])
+    embedding_df.to_csv("umap_embeddings.csv", index=False)
+
+    logger.info(f"Calculate density")
+    nbrs = NearestNeighbors(n_neighbors=50).fit(embedding)
+    distances, _ = nbrs.kneighbors(X)
+    density = 1.0 / distances.mean(axis=1)
+
+    logger.info(f"Graph UMAP embedding.")
 
     plt.figure(figsize=(10, 10))
     plt.scatter(
         data["UMAP1"],
         data["UMAP2"],
-        c=data["density"],
-        cmap="plasma",       # Try "inferno", "viridis", or FlowJo-like "jet"
-        s=5,
-        edgecolor="",
-        alpha=0.9,
+        c=density,
+        cmap="viridis",       # Try "inferno", "viridis", or FlowJo-like "jet"
+        s=2,
+        alpha=0.5,
     )
     plt.colorbar(label="Local Density")
     plt.title("UMAP Colored by Density (FlowJo Style)", fontsize=16)
