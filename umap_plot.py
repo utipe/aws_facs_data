@@ -2,11 +2,12 @@ import fcsparser
 import argparse
 import umap
 import matplotlib.pyplot as plt
-from sklearn.preprocessing import StandardScaler
 import time
 import logging
 import os
 import numpy as np
+from scipy.stats import gaussian_kde
+
 
 # --- Logging Setup ---
 log_file = os.path.join(os.path.dirname(__file__), "umap_run.log")
@@ -35,24 +36,44 @@ def run_umap_on_fcs(
     _, data = fcsparser.parse(fcs_path, reformat_meta=True)
 
     logger.info("Scaling selected columns (15 to 41)...")
-    scaled = StandardScaler().fit_transform(data.iloc[:, 15:15+26])
+    X = data.iloc[:, 15:15+26]
+    X_transformed = np.arcsinh(X / 5)
 
     logger.info("Running UMAP...")
     start = time.time()
     reducer = umap.UMAP(n_components=2, random_state=42, n_neighbors=15, min_dist=0.5)
-    embedding = reducer.fit_transform(scaled)
+    embedding = reducer.fit_transform(X_transformed)
+    data["UMAP1"], data["UMAP2"] = embedding[:, 0], embedding[:, 1]
     end = time.time()
     logger.info(f"UMAP took {end - start:.2f} seconds.")
 
-    plt.figure(figsize=(10, 7))
-    plt.scatter(embedding[:, 0], embedding[:, 1], s=2)
-    plt.title('UMAP Projection')
+    xy = np.vstack([data["UMAP1"], data["UMAP2"]])
+    z = gaussian_kde(xy)(xy)
+    data["density"] = z
+
+    plt.figure(figsize=(10, 10))
+    plt.scatter(
+        data["UMAP1"],
+        data["UMAP2"],
+        c=data["density"],
+        cmap="plasma",       # Try "inferno", "viridis", or FlowJo-like "jet"
+        s=5,
+        edgecolor="",
+        alpha=0.9,
+    )
+    plt.colorbar(label="Local Density")
+    plt.title("UMAP Colored by Density (FlowJo Style)", fontsize=16)
+    plt.xlabel("UMAP1")
+    plt.ylabel("UMAP2")
+    plt.grid(False)
+    plt.axis("off")  # Optional: like FlowJo
+    plt.tight_layout()
     plt.savefig(output_image_path, dpi=300)
     plt.close()
     logger.info(f"Saved UMAP plot to: {output_image_path}")
-    for var in range(15, 15+26):
-        print(f"start mapping for {data.columns[var]}")
-        plot_umap_intensity(embedding, data.iloc[:, var].values, data.columns[var], f"20250611_umap_{data.columns[var]}.png")
+    # for var in range(15, 15+26):
+    #     print(f"start mapping for {data.columns[var]}")
+    #     plot_umap_intensity(embedding, data.iloc[:, var].values, data.columns[var], f"20250611_umap_{data.columns[var]}.png")
 
 
 def plot_umap_intensity(embeddings, color_var, color_name, output_image_path) -> None:
