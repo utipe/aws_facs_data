@@ -7,6 +7,7 @@ import logging
 import os
 import numpy as np
 from sklearn.neighbors import NearestNeighbors
+import pandas as pd
 
 
 # --- Logging Setup ---
@@ -54,7 +55,7 @@ def run_umap_on_fcs(
 
     logger.info(f"Calculate density")
     nbrs = NearestNeighbors(n_neighbors=50).fit(embedding)
-    distances, _ = nbrs.kneighbors(X)
+    distances, _ = nbrs.kneighbors(embedding)
     density = 1.0 / distances.mean(axis=1)
 
     logger.info(f"Graph UMAP embedding.")
@@ -64,7 +65,7 @@ def run_umap_on_fcs(
         data["UMAP1"],
         data["UMAP2"],
         c=density,
-        cmap="viridis",       # Try "inferno", "viridis", or FlowJo-like "jet"
+        cmap="viridis",
         s=2,
         alpha=0.5,
     )
