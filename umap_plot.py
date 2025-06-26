@@ -9,7 +9,7 @@ from sklearn.neighbors import NearestNeighbors
 import pandas as pd
 import gc
 import os
-from spade_density_downsample import spade_density_downsample
+from spade_density_downsample import spade_density_downsample_faiss
 
 
 # --- Logging Setup ---
@@ -42,7 +42,9 @@ def run_umap_on_fcs(
         logger.info(f"--- Processing downsample level: {pct}% ---")
 
         # Downsampling
-        X_ds = spade_density_downsample(X_full, target_pctile=pct)
+        start = time.time()
+        X_ds = spade_density_downsample_faiss(X_full, target_pctile=pct)
+        logger.info(f"Downsampling completed in {time.time() - start:.2f} seconds.")
         if len(X_ds) == 0:
             logger.warning(f"No data left after downsampling at {pct}%. Skipping.")
             continue

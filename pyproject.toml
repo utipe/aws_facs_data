@@ -12,7 +12,8 @@ dependencies = [
   "pandas",
   "umap-learn",
   "matplotlib",
-  "scikit-learn"
+  "scikit-learn",
+  "faiss-cpu"
 ]
 
 [build-system]
