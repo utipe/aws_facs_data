@@ -37,7 +37,7 @@ def run_phate_on_fcs(
     logger.info("Extracting relevant columns and converting to NumPy...")
     X_full = data.iloc[:, 15:15+26].to_numpy(dtype=np.float32)
 
-        logger.info(f"--- Processing downsample level: {pct}% ---")
+    logger.info(f"--- Processing downsample level: {pct}% ---")
 
     # Downsampling
     start = time.time()
