@@ -108,7 +108,7 @@ def run_phate_on_fcs(
 
     for var in range(15, 15+26):
         print(f"start mapping for {data.columns[var]}")
-        plot_phate_intensity(embedding, data.iloc[:, var].values, data.columns[var], f"20250611_umap_{data.columns[var]}")
+        plot_phate_intensity(embedding, data.iloc[:, var].values, data.columns[var], f"20250611_phate_{data.columns[var]}")
 
 
 
