@@ -43,9 +43,6 @@ def run_phate_on_fcs(
     start = time.time()
     X_ds = spade_density_downsample_faiss(X_full, target_pctile=pct)
     logger.info(f"Downsampling completed in {time.time() - start:.2f} seconds.")
-    if len(X_ds) == 0:
-        logger.warning(f"No data left after downsampling at {pct}%. Skipping.")
-        continue
 
     # Arcsinh transformation
     X_trans = np.arcsinh(X_ds / cofactor)
@@ -142,8 +139,8 @@ if __name__ == "__main__":
         help="Path to the .fcs file (default: 20250520_ALL_Patient_BM_sort.fcs)"
     )
     parser.add_argument(
-        "output_image_path", nargs="?", default="20250606_an_replication.png",
-        help="Path to save the output PNG (default: 20250606_an_replication.png)"
+        "output_image_path", nargs="?", default="20250716_an_replication.png",
+        help="Path to save the output PNG (default: 20250716_an_replication.png)"
     )
     args = parser.parse_args()
 

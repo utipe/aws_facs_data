@@ -43,10 +43,7 @@ def run_umap_on_fcs(
     start = time.time()
     X_ds = spade_density_downsample_faiss(X_full, target_pctile=pct)
     logger.info(f"Downsampling completed in {time.time() - start:.2f} seconds.")
-    if len(X_ds) == 0:
-        logger.warning(f"No data left after downsampling at {pct}%. Skipping.")
-        continue
-
+    
     # Arcsinh transformation
     X_trans = np.arcsinh(X_ds / cofactor)
 
