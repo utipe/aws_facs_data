@@ -15,7 +15,10 @@ dependencies = [
   "scikit-learn",
   "faiss-cpu",
   "phate",
-  "scikit-learn"
+  "scikit-learn",
+  "trimap",
+  "pacmap",
+  "pydiffmap"
 ]
 
 [build-system]

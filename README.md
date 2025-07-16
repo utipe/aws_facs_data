@@ -25,7 +25,10 @@ These are listed in the `pyproject.toml`.
     ```bash
     sudo apt update
     sudo apt install unzip 
-    sudo apt install python3.12-venv
+    sudo add-apt-repository ppa:deadsnakes/ppa
+    sudo apt update
+    sudo apt install python3.11 python3.11-venv python3.11-dev
+    sudo apt install -y build-essential libffi-dev libssl-dev
 3. Install AWS CLI: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html#getting-started-install-instructions
 4. Download the required fcs file:
     ```bash
@@ -34,7 +37,7 @@ These are listed in the `pyproject.toml`.
 6. Create a virtual environment:
    ```bash
    cd aws_facs_data
-   python3 -m venv umap
+   python3.11 -m venv umap
    source umap/bin/activate
    pip install .
 ---
